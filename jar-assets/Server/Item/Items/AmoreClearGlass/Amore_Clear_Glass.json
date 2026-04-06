@@ -12,7 +12,7 @@
   "PlayerAnimationsId": "Block",
   "Set": "Amore_ClearGlass",
   "BlockType": {
-    "CustomModel": "Blocks/AmoreClearGlass/Glass_Cube.blockymodel",
+    "CustomModel": "Blocks/AmoreClearGlass/Glass_Pane.blockymodel",
     "CustomModelTexture": [
       {
         "Texture": "Blocks/AmoreClearGlass/Amore_Clear_Glass.png",
@@ -20,6 +20,7 @@
       }
     ],
     "DrawType": "Model",
+    "VariantRotation": "NESW",
     "Group": "Glass",
     "Flags": {},
     "Gathering": {
