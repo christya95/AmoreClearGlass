@@ -1,0 +1,15 @@
+# Build output
+/build/
+/dist/
+
+# Local JDK (copy from Hytale_JossDoubleJump or add manually)
+/tools/
+
+# OS / IDE
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+.idea/
+.vscode/
+*.log

@@ -1,0 +1,45 @@
+{
+  "TranslationProperties": {
+    "Name": "items.Amore_Glass_Black.name",
+    "Description": "items.Amore_Glass_Black.description"
+  },
+  "Id": "Amore_Glass_Black",
+  "MaxStack": 100,
+  "Icon": "Icons/ItemsGenerated/Amore_Glass_Black.png",
+  "Texture": "BlockTextures/Amore_Glass_Black.png",
+  "Categories": [
+    "Blocks.Rocks"
+  ],
+  "PlayerAnimationsId": "Block",
+  "Set": "Amore_ClearGlass",
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Cube",
+    "Opacity": "Semitransparent",
+    "Group": "Glass",
+    "Flags": {},
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "ItemId": "Amore_Glass_Black"
+      }
+    },
+    "BlockParticleSetId": "Glass",
+    "Textures": [
+      {
+        "All": "BlockTextures/Amore_Glass_Black.png",
+        "Weight": 1
+      }
+    ],
+    "ParticleColor": "#2d2d2d",
+    "BlockSoundSetId": "Glass",
+    "CubeShadingMode": "Flat",
+    "BlockBreakingDecalId": "Breaking_Decals_Rock"
+  },
+  "ResourceTypes": [
+    {
+      "Id": "Rock"
+    }
+  ],
+  "ItemSoundSetId": "ISS_Blocks_Stone"
+}
