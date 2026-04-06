@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "items.Amore_Glass_Lime.name",
-    "Description": "items.Amore_Glass_Lime.description"
+    "Name": "server.items.Amore_Glass_Lime.name",
+    "Description": "server.items.Amore_Glass_Lime.description"
   },
   "Id": "Amore_Glass_Lime",
   "MaxStack": 100,
@@ -15,7 +15,7 @@
   "BlockType": {
     "Material": "Solid",
     "DrawType": "Cube",
-    "Opacity": "Semitransparent",
+    "Opacity": "Transparent",
     "Group": "Glass",
     "Flags": {},
     "Gathering": {
@@ -34,7 +34,8 @@
     "ParticleColor": "#6eb82d",
     "BlockSoundSetId": "Glass",
     "CubeShadingMode": "Flat",
-    "BlockBreakingDecalId": "Breaking_Decals_Rock"
+    "BlockBreakingDecalId": "Breaking_Decals_Rock",
+    "RequiresAlphaBlending": true
   },
   "ResourceTypes": [
     {

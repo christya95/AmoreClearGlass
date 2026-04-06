@@ -1,5 +1,4 @@
 # Imports Clear Glass Pack (Minecraft) tiles without the gIass.png watermark, scales for Hytale.
-# Watermark lives on gIass.png; CTM tile 20.png is a clean stained-glass face per color.
 # Set $env:MC_CLEAR_GLASS_PACK to your pack root, or edit $defaultMc below.
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
@@ -34,8 +33,9 @@ function Save-ScaledPng([string]$sourcePath, [string]$destPath, [int]$w, [int]$h
   }
 }
 
-# Composite every pixel onto a solid background and force A=255. World translucency comes from BlockType Opacity, not PNG alpha.
-function Flatten-BlockTextureOnBackground([string]$pngPath, [int]$br, [int]$bg, [int]$bb) {
+# MC clear-glass tiles use A=0 + RGB black for "air" in the pane. That reads as black in Hytale unless RGB is tinted.
+# Keep real alpha so Transparent + RequiresAlphaBlending can blend; use light icy RGB (not 0,0,0).
+function Repair-ClearGlassTile([string]$pngPath) {
   $bytes = [System.IO.File]::ReadAllBytes($pngPath)
   $ms = New-Object System.IO.MemoryStream(,$bytes)
   $bmp = [System.Drawing.Bitmap]::FromStream($ms)
@@ -44,15 +44,10 @@ function Flatten-BlockTextureOnBackground([string]$pngPath, [int]$br, [int]$bg, 
     for ($y = 0; $y -lt $bmp.Height; $y++) {
       for ($x = 0; $x -lt $bmp.Width; $x++) {
         $c = $bmp.GetPixel($x, $y)
-        $a = [int]$c.A
-        $r = [int]$c.R; $g = [int]$c.G; $b = [int]$c.B
-        $nr = [int][math]::Round(($r * $a + $br * (255 - $a)) / 255)
-        $ng = [int][math]::Round(($g * $a + $bg * (255 - $a)) / 255)
-        $nb = [int][math]::Round(($b * $a + $bb * (255 - $a)) / 255)
-        $nr = [math]::Min(255, [math]::Max(0, $nr))
-        $ng = [math]::Min(255, [math]::Max(0, $ng))
-        $nb = [math]::Min(255, [math]::Max(0, $nb))
-        $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, $nr, $ng, $nb))
+        if ($c.A -eq 0 -and $c.R -lt 48 -and $c.G -lt 48 -and $c.B -lt 48) {
+          $glass = [System.Drawing.Color]::FromArgb(200, 210, 228, 248)
+          $bmp.SetPixel($x, $y, $glass)
+        }
       }
     }
     $bmp.Save($pngPath, [System.Drawing.Imaging.ImageFormat]::Png)
@@ -62,7 +57,6 @@ function Flatten-BlockTextureOnBackground([string]$pngPath, [int]$br, [int]$bg, 
   }
 }
 
-# Item Id -> { folder = MC subfolder; file = png name in that folder }
 $idMap = @{
   "Amore_Clear_Glass"   = @{ folder = "aregular"; file = "glass.png" }
   "Amore_Glass_Black"   = @{ folder = "black";    file = "20.png" }
@@ -95,11 +89,10 @@ Get-ChildItem (Join-Path $root "jar-assets\Server\Item\Items\AmoreClearGlass") -
   Save-ScaledPng $srcPath (Join-Path $btOut $flat) 32 32
   Save-ScaledPng $srcPath (Join-Path $icOut $flat) 64 64
   if ($id -eq "Amore_Clear_Glass") {
-    Flatten-BlockTextureOnBackground (Join-Path $btOut $flat) 210 228 248
-  } else {
-    Flatten-BlockTextureOnBackground (Join-Path $btOut $flat) 255 255 255
+    Repair-ClearGlassTile (Join-Path $btOut $flat)
+    Repair-ClearGlassTile (Join-Path $icOut $flat)
   }
 }
 
 Write-Host "Imported clean CTM tiles from: $mcGlass"
-Write-Host "BlockTextures flattened to opaque RGB (alpha from BlockType only). Icons unchanged."
+Write-Host "Clear glass: repaired A=0 black holes in BlockTextures + Icons. Stained: unchanged alpha from pack."

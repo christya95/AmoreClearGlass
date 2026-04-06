@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "items.Amore_Clear_Glass.name",
-    "Description": "items.Amore_Clear_Glass.description"
+    "Name": "server.items.Amore_Clear_Glass.name",
+    "Description": "server.items.Amore_Clear_Glass.description"
   },
   "Id": "Amore_Clear_Glass",
   "MaxStack": 100,
@@ -15,7 +15,7 @@
   "BlockType": {
     "Material": "Solid",
     "DrawType": "Cube",
-    "Opacity": "Semitransparent",
+    "Opacity": "Transparent",
     "Group": "Glass",
     "Flags": {},
     "Gathering": {
@@ -34,7 +34,8 @@
     "ParticleColor": "#cfefff",
     "BlockSoundSetId": "Glass",
     "CubeShadingMode": "Flat",
-    "BlockBreakingDecalId": "Breaking_Decals_Rock"
+    "BlockBreakingDecalId": "Breaking_Decals_Rock",
+    "RequiresAlphaBlending": true
   },
   "ResourceTypes": [
     {

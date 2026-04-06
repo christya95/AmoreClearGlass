@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "items.Amore_Glass_Green.name",
-    "Description": "items.Amore_Glass_Green.description"
+    "Name": "server.items.Amore_Glass_Green.name",
+    "Description": "server.items.Amore_Glass_Green.description"
   },
   "Id": "Amore_Glass_Green",
   "MaxStack": 100,
@@ -15,7 +15,7 @@
   "BlockType": {
     "Material": "Solid",
     "DrawType": "Cube",
-    "Opacity": "Semitransparent",
+    "Opacity": "Transparent",
     "Group": "Glass",
     "Flags": {},
     "Gathering": {
@@ -34,7 +34,8 @@
     "ParticleColor": "#2d5c2d",
     "BlockSoundSetId": "Glass",
     "CubeShadingMode": "Flat",
-    "BlockBreakingDecalId": "Breaking_Decals_Rock"
+    "BlockBreakingDecalId": "Breaking_Decals_Rock",
+    "RequiresAlphaBlending": true
   },
   "ResourceTypes": [
     {
