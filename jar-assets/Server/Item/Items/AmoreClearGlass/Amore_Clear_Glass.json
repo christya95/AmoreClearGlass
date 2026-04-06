@@ -14,7 +14,15 @@
   "Set": "Amore_ClearGlass",
   "BlockType": {
     "Material": "Solid",
-    "DrawType": "Cube",
+    "DrawType": "Model",
+    "CustomModel": "Blocks/AmoreClearGlass/Glass_Cube.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "BlockTextures/Amore_Clear_Glass.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
     "Opacity": "Transparent",
     "Group": "Glass",
     "Flags": {},
@@ -25,16 +33,8 @@
       }
     },
     "BlockParticleSetId": "Glass",
-    "Textures": [
-      {
-        "All": "BlockTextures/Amore_Clear_Glass.png",
-        "Weight": 1
-      }
-    ],
     "ParticleColor": "#cfefff",
     "BlockSoundSetId": "Glass",
-    "CubeShadingMode": "Flat",
-    "BlockBreakingDecalId": "Breaking_Decals_Rock",
     "RequiresAlphaBlending": true
   },
   "ResourceTypes": [
