@@ -1,29 +1,25 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Amore_Clear_Glass.name",
-    "Description": "server.items.Amore_Clear_Glass.description"
+    "Name": "items.Amore_Clear_Glass.name",
+    "Description": "items.Amore_Clear_Glass.description"
   },
   "Id": "Amore_Clear_Glass",
   "MaxStack": 100,
   "Icon": "Icons/ItemsGenerated/Amore_Clear_Glass.png",
-  "Texture": "BlockTextures/Amore_Clear_Glass.png",
   "Categories": [
     "Blocks.Rocks"
   ],
   "PlayerAnimationsId": "Block",
   "Set": "Amore_ClearGlass",
   "BlockType": {
-    "Material": "Solid",
-    "DrawType": "Model",
     "CustomModel": "Blocks/AmoreClearGlass/Glass_Cube.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "BlockTextures/Amore_Clear_Glass.png",
+        "Texture": "Blocks/AmoreClearGlass/Amore_Clear_Glass.png",
         "Weight": 1
       }
     ],
-    "CustomModelScale": 1,
-    "Opacity": "Transparent",
+    "DrawType": "Model",
     "Group": "Glass",
     "Flags": {},
     "Gathering": {
@@ -35,7 +31,8 @@
     "BlockParticleSetId": "Glass",
     "ParticleColor": "#cfefff",
     "BlockSoundSetId": "Glass",
-    "RequiresAlphaBlending": true
+    "Opacity": "Cutout",
+    "Material": "Solid"
   },
   "ResourceTypes": [
     {

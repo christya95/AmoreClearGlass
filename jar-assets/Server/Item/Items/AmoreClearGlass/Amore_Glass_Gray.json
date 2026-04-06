@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Amore_Glass_Gray.name",
-    "Description": "server.items.Amore_Glass_Gray.description"
+    "Name": "items.Amore_Glass_Gray.name",
+    "Description": "items.Amore_Glass_Gray.description"
   },
   "Id": "Amore_Glass_Gray",
   "MaxStack": 100,
