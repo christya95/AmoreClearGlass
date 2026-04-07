@@ -11,6 +11,26 @@
   ],
   "PlayerAnimationsId": "Block",
   "Set": "Amore_ClearGlass",
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Plant_Petals_Pink",
+        "Quantity": 5
+      },
+      {
+        "ItemId": "Rock_Sandstone",
+        "Quantity": 50
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Processing",
+        "Id": "Furnace"
+      }
+    ],
+    "OutputQuantity": 20,
+    "TimeSeconds": 15
+  },
   "BlockType": {
     "CustomModel": "Blocks/AmoreClearGlass/Glass_Pane.blockymodel",
     "CustomModelTexture": [
