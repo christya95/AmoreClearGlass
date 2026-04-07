@@ -1,5 +1,8 @@
-# Generates all Amore glass pane textures (32x32): transparent center (no face haze), rim-only opacity,
-# optional light tint in bands — same strategy as production clear glass.
+# Generates all Amore glass pane textures (32x32).
+#
+# Clear: transparent center + neutral dark rim (production) / diagnostic.
+# Stained: NEUTRAL rim bands match clear production (frame/lead not recolored). Interior (d>=3) uses a
+# flat low-alpha tint so the pane reads as lightly colored glass — not alpha-0 center with colored border.
 #
 # Usage (from repo root):
 #   powershell -ExecutionPolicy Bypass -File scripts\generate-all-glass-pane-textures.ps1
@@ -73,40 +76,61 @@ function Clamp-Byte([int]$v) {
   return $v
 }
 
-# Stained: same band alphas as clear production; RGB blends from neutral dark toward stain color (rim only).
-function New-StainedGlassBitmap([int]$w, [int]$h, [int]$baseR, [int]$baseG, [int]$baseB) {
+# Interior tint: low alpha + muted stain RGB (see-through, not milky). Tune $InteriorAlpha / blend.
+function Get-InteriorTintRgb([int]$baseR, [int]$baseG, [int]$baseB, [double]$blend) {
+  $nr, $ng, $nb = 34, 34, 36
+  $r = Clamp-Byte ([int][Math]::Round($nr + ($baseR - $nr) * $blend))
+  $g = Clamp-Byte ([int][Math]::Round($ng + ($baseG - $ng) * $blend))
+  $b = Clamp-Byte ([int][Math]::Round($nb + ($baseB - $nb) * $blend))
+  return @( $r, $g, $b )
+}
+
+# Stained: frame bands d=0..2 identical to clear production (neutral). d>=3 = uniform light tint (not alpha 0).
+function New-StainedGlassBitmap([int]$w, [int]$h, [int]$baseR, [int]$baseG, [int]$baseB, [int]$InteriorAlpha, [double]$TintBlend) {
   $fmt = [System.Drawing.Imaging.PixelFormat]::Format32bppArgb
   $bmp = New-Object System.Drawing.Bitmap -ArgumentList @($w, $h, $fmt)
-  $dr, $dg, $db = 14, 14, 16
+  $tr, $tg, $tb = Get-InteriorTintRgb $baseR $baseG $baseB $TintBlend
   for ($y = 0; $y -lt $h; $y++) {
     for ($x = 0; $x -lt $w; $x++) {
       $dEdge = [int]([Math]::Min([Math]::Min($x, $y), [Math]::Min(($w - 1) - $x, ($h - 1) - $y)))
       if ($dEdge -ge 3) {
-        $c = [System.Drawing.Color]::FromArgb(0, 12, 12, 13)
+        $c = [System.Drawing.Color]::FromArgb($InteriorAlpha, $tr, $tg, $tb)
       }
       elseif ($dEdge -eq 2) {
-        $t = 0.38
-        $a = 28
-        $r = Clamp-Byte ([int][Math]::Round($dr + ($baseR - $dr) * $t))
-        $g = Clamp-Byte ([int][Math]::Round($dg + ($baseG - $dg) * $t))
-        $b = Clamp-Byte ([int][Math]::Round($db + ($baseB - $db) * $t))
-        $c = [System.Drawing.Color]::FromArgb($a, $r, $g, $b)
+        $c = [System.Drawing.Color]::FromArgb(28, 48, 48, 50)
       }
       elseif ($dEdge -eq 1) {
-        $t = 0.78
-        $a = 165
-        $r = Clamp-Byte ([int][Math]::Round($dr + ($baseR - $dr) * $t))
-        $g = Clamp-Byte ([int][Math]::Round($dg + ($baseG - $dg) * $t))
-        $b = Clamp-Byte ([int][Math]::Round($db + ($baseB - $db) * $t))
-        $c = [System.Drawing.Color]::FromArgb($a, $r, $g, $b)
+        $c = [System.Drawing.Color]::FromArgb(165, 44, 44, 46)
       }
       else {
-        $t = 0.92
-        $a = 235
-        $r = Clamp-Byte ([int][Math]::Round($dr + ($baseR - $dr) * $t))
-        $g = Clamp-Byte ([int][Math]::Round($dg + ($baseG - $dg) * $t))
-        $b = Clamp-Byte ([int][Math]::Round($db + ($baseB - $db) * $t))
-        $c = [System.Drawing.Color]::FromArgb($a, $r, $g, $b)
+        $c = [System.Drawing.Color]::FromArgb(235, 36, 36, 38)
+      }
+      $bmp.SetPixel($x, $y, $c)
+    }
+  }
+  return $bmp
+}
+
+# Diagnostic: neutral frame + faint green interior (swap into a stained item JSON to test flicker/tint).
+function New-StainedDiagnosticGreenBitmap([int]$w, [int]$h) {
+  $fmt = [System.Drawing.Imaging.PixelFormat]::Format32bppArgb
+  $bmp = New-Object System.Drawing.Bitmap -ArgumentList @($w, $h, $fmt)
+  $gr, $gg, $gb = 48, 120, 72
+  $tr, $tg, $tb = Get-InteriorTintRgb $gr $gg $gb 0.55
+  for ($y = 0; $y -lt $h; $y++) {
+    for ($x = 0; $x -lt $w; $x++) {
+      $dEdge = [int]([Math]::Min([Math]::Min($x, $y), [Math]::Min(($w - 1) - $x, ($h - 1) - $y)))
+      if ($dEdge -ge 3) {
+        $c = [System.Drawing.Color]::FromArgb(26, $tr, $tg, $tb)
+      }
+      elseif ($dEdge -eq 2) {
+        $c = [System.Drawing.Color]::FromArgb(28, 48, 48, 50)
+      }
+      elseif ($dEdge -eq 1) {
+        $c = [System.Drawing.Color]::FromArgb(165, 44, 44, 46)
+      }
+      else {
+        $c = [System.Drawing.Color]::FromArgb(235, 36, 36, 38)
       }
       $bmp.SetPixel($x, $y, $c)
     }
@@ -156,17 +180,30 @@ if ($Scope -eq "All" -or $Scope -eq "Clear") {
   finally { $b.Dispose() }
 }
 
+# Interior: ~22–26 alpha reads as light tint while staying clearly see-through (flat field, no radial haze).
+$interiorAlpha = 24
+$tintBlend = 0.46
+
 if ($Scope -eq "All" -or $Scope -eq "Stained") {
   foreach ($entry in $stainMap.GetEnumerator()) {
     $name = $entry.Key
     $rgb = $entry.Value
-    $b = New-StainedGlassBitmap $w $h $rgb[0] $rgb[1] $rgb[2]
+    $ia = $interiorAlpha
+    $tb = $tintBlend
+    if ($name -eq "Amore_Glass_White") { $ia = 20; $tb = 0.28 }
+    if ($name -eq "Amore_Glass_Black") { $ia = 18; $tb = 0.32 }
+    $b = New-StainedGlassBitmap $w $h $rgb[0] $rgb[1] $rgb[2] $ia $tb
     try {
       $fn = "$name.png"
       Write-Png32 $b (Join-Path $bt $fn)
     }
     finally { $b.Dispose() }
   }
+  $dbg = New-StainedDiagnosticGreenBitmap $w $h
+  try {
+    Write-Png32 $dbg (Join-Path $bt "Amore_Glass_Diagnostic_GreenTint.png")
+  }
+  finally { $dbg.Dispose() }
 }
 
 Write-Host "Done (Scope=$Scope)."
