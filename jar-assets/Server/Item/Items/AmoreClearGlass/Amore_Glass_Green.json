@@ -20,6 +20,10 @@
       {
         "ItemId": "Rock_Sandstone",
         "Quantity": 50
+      },
+      {
+        "ItemId": "Ingredient_Bar_Copper",
+        "Quantity": 5
       }
     ],
     "BenchRequirement": [

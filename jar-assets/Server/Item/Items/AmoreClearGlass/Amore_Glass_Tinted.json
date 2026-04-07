@@ -14,7 +14,11 @@
   "Recipe": {
     "Input": [
       {
-        "ItemId": "Plant_Petals_Blood",
+        "ItemId": "Plant_Petals_Black",
+        "Quantity": 5
+      },
+      {
+        "ItemId": "Ingredient_Bar_Mithril",
         "Quantity": 5
       },
       {

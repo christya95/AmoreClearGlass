@@ -14,12 +14,12 @@
   "Recipe": {
     "Input": [
       {
-        "ItemId": "Plant_Petals_Yellow",
-        "Quantity": 5
-      },
-      {
         "ItemId": "Rock_Sandstone",
         "Quantity": 50
+      },
+      {
+        "ItemId": "Ingredient_Charcoal",
+        "Quantity": 5
       }
     ],
     "BenchRequirement": [

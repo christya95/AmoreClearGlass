@@ -34,6 +34,3 @@ Amore_Glass_White.name = Amore White Glass Pane
 Amore_Glass_White.description = A white glass pane.
 Amore_Glass_Yellow.name = Amore Yellow Glass Pane
 Amore_Glass_Yellow.description = A yellow glass pane.
-
-Amore_McwRef_Glass_Block.name = [Control] Mcw Reference Glass
-Amore_McwRef_Glass_Block.description = McwHyWindows glass model and texture copied into this pack for A/B render testing.

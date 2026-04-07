@@ -1,4 +1,4 @@
-# Reports alpha/RGB stats for a 32x32 PNG (clear-glass audit).
+# Dev helper: alpha/RGB stats for a PNG (e.g. clear-glass face after regen). Not used by the mod at runtime.
 param([Parameter(Mandatory=$true)][string]$Path)
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
