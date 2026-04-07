@@ -1,7 +1,7 @@
 {
     "Group": "amore",
     "Name": "AmoreClearGlass",
-    "Version": "1.0.5",
+    "Version": "1.0.6",
     "Description": "Clear and stained glass blocks in the Clear Glass Pack style (textures adapted from DnatorGames). OptiFine-style connected textures are not replicated; each block uses a single clear face texture.",
     "Authors": [
         {

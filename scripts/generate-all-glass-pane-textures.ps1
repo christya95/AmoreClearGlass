@@ -116,12 +116,12 @@ function New-StainedDiagnosticGreenBitmap([int]$w, [int]$h) {
   $fmt = [System.Drawing.Imaging.PixelFormat]::Format32bppArgb
   $bmp = New-Object System.Drawing.Bitmap -ArgumentList @($w, $h, $fmt)
   $gr, $gg, $gb = 48, 120, 72
-  $tr, $tg, $tb = Get-InteriorTintRgb $gr $gg $gb 0.55
+  $tr, $tg, $tb = Get-InteriorTintRgb $gr $gg $gb 0.28
   for ($y = 0; $y -lt $h; $y++) {
     for ($x = 0; $x -lt $w; $x++) {
       $dEdge = [int]([Math]::Min([Math]::Min($x, $y), [Math]::Min(($w - 1) - $x, ($h - 1) - $y)))
       if ($dEdge -ge 3) {
-        $c = [System.Drawing.Color]::FromArgb(26, $tr, $tg, $tb)
+        $c = [System.Drawing.Color]::FromArgb(9, $tr, $tg, $tb)
       }
       elseif ($dEdge -eq 2) {
         $c = [System.Drawing.Color]::FromArgb(28, 48, 48, 50)
@@ -180,9 +180,10 @@ if ($Scope -eq "All" -or $Scope -eq "Clear") {
   finally { $b.Dispose() }
 }
 
-# Interior: ~22–26 alpha reads as light tint while staying clearly see-through (flat field, no radial haze).
-$interiorAlpha = 24
-$tintBlend = 0.46
+# Interior field: keep alpha LOW (~8–10) so panes stay clearly see-through; blend controls hue strength only.
+# (Higher alpha + saturated RGB read as an opaque colored sheet in-game.)
+$interiorAlpha = 9
+$tintBlend = 0.28
 
 if ($Scope -eq "All" -or $Scope -eq "Stained") {
   foreach ($entry in $stainMap.GetEnumerator()) {
@@ -190,8 +191,8 @@ if ($Scope -eq "All" -or $Scope -eq "Stained") {
     $rgb = $entry.Value
     $ia = $interiorAlpha
     $tb = $tintBlend
-    if ($name -eq "Amore_Glass_White") { $ia = 20; $tb = 0.28 }
-    if ($name -eq "Amore_Glass_Black") { $ia = 18; $tb = 0.32 }
+    if ($name -eq "Amore_Glass_White") { $ia = 7; $tb = 0.18 }
+    if ($name -eq "Amore_Glass_Black") { $ia = 7; $tb = 0.20 }
     $b = New-StainedGlassBitmap $w $h $rgb[0] $rgb[1] $rgb[2] $ia $tb
     try {
       $fn = "$name.png"
