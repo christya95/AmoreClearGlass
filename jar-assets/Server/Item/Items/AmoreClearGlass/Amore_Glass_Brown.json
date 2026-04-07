@@ -6,16 +6,21 @@
   "Id": "Amore_Glass_Brown",
   "MaxStack": 100,
   "Icon": "Icons/ItemsGenerated/Amore_Glass_Brown.png",
-  "Texture": "BlockTextures/Amore_Glass_Brown.png",
   "Categories": [
     "Blocks.Rocks"
   ],
   "PlayerAnimationsId": "Block",
   "Set": "Amore_ClearGlass",
   "BlockType": {
-    "Material": "Solid",
-    "DrawType": "Cube",
-    "Opacity": "Transparent",
+    "CustomModel": "Blocks/AmoreClearGlass/Glass_Pane.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "BlockTextures/Amore_Glass_Brown.png",
+        "Weight": 1
+      }
+    ],
+    "DrawType": "Model",
+    "VariantRotation": "NESW",
     "Group": "Glass",
     "Flags": {},
     "Gathering": {
@@ -25,17 +30,10 @@
       }
     },
     "BlockParticleSetId": "Glass",
-    "Textures": [
-      {
-        "All": "BlockTextures/Amore_Glass_Brown.png",
-        "Weight": 1
-      }
-    ],
     "ParticleColor": "#5c3d2e",
     "BlockSoundSetId": "Glass",
-    "CubeShadingMode": "Flat",
-    "BlockBreakingDecalId": "Breaking_Decals_Rock",
-    "RequiresAlphaBlending": true
+    "Opacity": "Cutout",
+    "Material": "Solid"
   },
   "ResourceTypes": [
     {
