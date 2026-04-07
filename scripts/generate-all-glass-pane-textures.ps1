@@ -1,15 +1,17 @@
 # Generates all Amore glass pane textures (32x32).
 #
 # Clear: transparent center + neutral dark rim (production) / diagnostic.
-# Stained: NEUTRAL rim bands match clear production (frame/lead not recolored). Interior (d>=3) uses a
-# flat low-alpha tint so the pane reads as lightly colored glass — not alpha-0 center with colored border.
+# Stained: NEUTRAL rim bands match clear production (frame/lead not recolored). Interior (d>=3) adds only a
+# faint wash on top of clear-like transparency — low alpha + low blend (dense interior = opaque sheet in-game).
 #
 # Usage (from repo root):
 #   powershell -ExecutionPolicy Bypass -File scripts\generate-all-glass-pane-textures.ps1
+# Tune green only:  ... -Scope Stained -GreenOnly
 #
 param(
   [ValidateSet("All", "Clear", "Stained")]
-  [string]$Scope = "All"
+  [string]$Scope = "All",
+  [switch]$GreenOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -112,16 +114,16 @@ function New-StainedGlassBitmap([int]$w, [int]$h, [int]$baseR, [int]$baseG, [int
 }
 
 # Diagnostic: neutral frame + faint green interior (swap into a stained item JSON to test flicker/tint).
-function New-StainedDiagnosticGreenBitmap([int]$w, [int]$h) {
+function New-StainedDiagnosticGreenBitmap([int]$w, [int]$h, [int]$InteriorAlpha, [double]$TintBlend) {
   $fmt = [System.Drawing.Imaging.PixelFormat]::Format32bppArgb
   $bmp = New-Object System.Drawing.Bitmap -ArgumentList @($w, $h, $fmt)
   $gr, $gg, $gb = 48, 120, 72
-  $tr, $tg, $tb = Get-InteriorTintRgb $gr $gg $gb 0.28
+  $tr, $tg, $tb = Get-InteriorTintRgb $gr $gg $gb $TintBlend
   for ($y = 0; $y -lt $h; $y++) {
     for ($x = 0; $x -lt $w; $x++) {
       $dEdge = [int]([Math]::Min([Math]::Min($x, $y), [Math]::Min(($w - 1) - $x, ($h - 1) - $y)))
       if ($dEdge -ge 3) {
-        $c = [System.Drawing.Color]::FromArgb(9, $tr, $tg, $tb)
+        $c = [System.Drawing.Color]::FromArgb($InteriorAlpha, $tr, $tg, $tb)
       }
       elseif ($dEdge -eq 2) {
         $c = [System.Drawing.Color]::FromArgb(28, 48, 48, 50)
@@ -180,19 +182,19 @@ if ($Scope -eq "All" -or $Scope -eq "Clear") {
   finally { $b.Dispose() }
 }
 
-# Interior field: keep alpha LOW (~8–10) so panes stay clearly see-through; blend controls hue strength only.
-# (Higher alpha + saturated RGB read as an opaque colored sheet in-game.)
-$interiorAlpha = 9
-$tintBlend = 0.28
+# Interior: match clear (A=0) in spirit — use very low alpha (~3–4) + modest blend so tint is a wash, not a sheet.
+$interiorAlpha = 4
+$tintBlend = 0.18
 
 if ($Scope -eq "All" -or $Scope -eq "Stained") {
   foreach ($entry in $stainMap.GetEnumerator()) {
     $name = $entry.Key
+    if ($GreenOnly -and $name -ne "Amore_Glass_Green") { continue }
     $rgb = $entry.Value
     $ia = $interiorAlpha
     $tb = $tintBlend
-    if ($name -eq "Amore_Glass_White") { $ia = 7; $tb = 0.18 }
-    if ($name -eq "Amore_Glass_Black") { $ia = 7; $tb = 0.20 }
+    if ($name -eq "Amore_Glass_White") { $ia = 3; $tb = 0.10 }
+    if ($name -eq "Amore_Glass_Black") { $ia = 3; $tb = 0.11 }
     $b = New-StainedGlassBitmap $w $h $rgb[0] $rgb[1] $rgb[2] $ia $tb
     try {
       $fn = "$name.png"
@@ -200,11 +202,13 @@ if ($Scope -eq "All" -or $Scope -eq "Stained") {
     }
     finally { $b.Dispose() }
   }
-  $dbg = New-StainedDiagnosticGreenBitmap $w $h
-  try {
-    Write-Png32 $dbg (Join-Path $bt "Amore_Glass_Diagnostic_GreenTint.png")
+  if (-not $GreenOnly) {
+    $dbg = New-StainedDiagnosticGreenBitmap $w $h $interiorAlpha $tintBlend
+    try {
+      Write-Png32 $dbg (Join-Path $bt "Amore_Glass_Diagnostic_GreenTint.png")
+    }
+    finally { $dbg.Dispose() }
   }
-  finally { $dbg.Dispose() }
 }
 
 Write-Host "Done (Scope=$Scope)."
