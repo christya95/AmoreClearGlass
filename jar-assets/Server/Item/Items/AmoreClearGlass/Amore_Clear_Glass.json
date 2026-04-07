@@ -15,7 +15,7 @@
     "CustomModel": "Blocks/AmoreClearGlass/Glass_Pane.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/AmoreClearGlass/Amore_Clear_Glass_Diagnostic.png",
+        "Texture": "Blocks/AmoreClearGlass/Amore_Clear_Glass.png",
         "Weight": 1
       }
     ],

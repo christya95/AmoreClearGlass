@@ -32,7 +32,8 @@
     "BlockParticleSetId": "Glass",
     "ParticleColor": "#f0f0f0",
     "BlockSoundSetId": "Glass",
-    "Opacity": "Cutout",
+    "Opacity": "Transparent",
+    "RequiresAlphaBlending": true,
     "Material": "Solid"
   },
   "ResourceTypes": [
