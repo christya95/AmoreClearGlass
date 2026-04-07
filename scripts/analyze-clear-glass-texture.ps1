@@ -1,4 +1,4 @@
-# Dev helper: alpha/RGB stats for a PNG (e.g. clear-glass face after regen). Not used by the mod at runtime.
+# Dev helper: alpha/RGB stats for a pane PNG (32x32 face or wider atlas e.g. 48x32). Not used at runtime.
 param([Parameter(Mandatory=$true)][string]$Path)
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
